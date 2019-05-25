@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 
 export default class Form extends React.Component {
   state = {
@@ -7,7 +8,7 @@ export default class Form extends React.Component {
 
   render() {
     return (
-      <div>
+      <>
         <input
           placeholder="url"
           value={this.state.imageURL}
@@ -16,7 +17,7 @@ export default class Form extends React.Component {
         <button onClick={this.onSubmitButtonClicked}>
           submit
         </button>
-      </div>
+      </>
     )
   }
 
@@ -26,8 +27,16 @@ export default class Form extends React.Component {
     })
   }
 
-  onSubmitButtonClicked = () => {
-    // TODO: call server
-    this.props.getResult('hello world')
+  onSubmitButtonClicked = async () => {
+    this.props.setLoadingStatus(true)
+
+    const result = await axios.get(
+      'http://localhost:3001/detectImage/?imageURL=' + encodeURIComponent(this.state.imageURL)
+    )
+    console.log('result', result)
+    const detectionResultArray = result.data.detectionResult.TextDetections
+    this.props.getResult(detectionResultArray)
+
+    this.props.setLoadingStatus(false)
   }
 }

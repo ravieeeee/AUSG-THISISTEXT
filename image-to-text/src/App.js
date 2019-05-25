@@ -5,10 +5,12 @@ import Form from './components/Form'
 export default class App extends React.Component {
   state = {
     isLoading: false,
-    result: ''
+    detectionResult: ''
   }
 
   render() {
+    const Fragment = React.Fragment
+    
     return (
       <div className="App">
         {this.state.isLoading ?
@@ -18,8 +20,14 @@ export default class App extends React.Component {
             setLoadingStatus={this.setLoadingStatus}
           />
         }
-        {this.state.result !== '' ?
-          <div>{this.state.result}</div> : null
+        {this.state.detectionResult !== '' ?
+          this.state.detectionResult.map((result, index) => (
+            <Fragment key={index}>
+              <h3>{result.Type}</h3>
+              <div>{result.DetectedText}</div>
+            </Fragment>
+          ))
+          : null
         }
       </div>
     )
@@ -31,9 +39,9 @@ export default class App extends React.Component {
     })
   }
 
-  getResult = (result) => {
+  getResult = (detectionResult) => {
     this.setState({
-      result
+      detectionResult
     })
   }
 }
